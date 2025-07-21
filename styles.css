@@ -503,20 +503,140 @@ header h1 {
 @media print {
     body {
         background: white;
+        margin: 0;
+        padding: 0;
+        font-size: 12pt;
     }
     
     .form-section, .button-group {
         display: none;
     }
     
-    .celebration-card {
-        box-shadow: none;
-        border: 2px solid var(--primary-color);
+    .output-section {
+        margin-top: 0 !important;
     }
     
+    .celebration-card {
+        box-shadow: none;
+        border: 2px solid #333;
+        border-radius: 12px;
+        margin: 0;
+        page-break-inside: avoid;
+        background: white !important;
+    }
+    
+    /* Hide the decorative header to save space */
     .card-header {
-        background: var(--primary-color) !important;
-        -webkit-print-color-adjust: exact;
-        color-adjust: exact;
+        display: none;
+    }
+    
+    .card-content {
+        padding: 20px;
+    }
+    
+    .photo-display img {
+        max-height: 200px;
+        border: 2px solid #333;
+    }
+    
+    .message-display {
+        background: #f9f9f9 !important;
+        border: 1px solid #333 !important;
+        page-break-inside: avoid;
+        transform: none !important;
+        margin-bottom: 15px;
+        padding: 15px;
+    }
+    
+    .message-display::before,
+    .message-display::after {
+        display: none;
+    }
+    
+    .message-display h3 {
+        color: #333 !important;
+        font-size: 18pt;
+        transform: none !important;
+        margin-bottom: 10px;
+    }
+    
+    .message-display p {
+        color: #333 !important;
+        font-size: 12pt;
+        line-height: 1.4;
+    }
+    
+    .bible-verse-display {
+        background: #f5f5f5 !important;
+        border: 1px dashed #666 !important;
+        transform: none !important;
+        page-break-inside: avoid;
+        margin-top: 10px;
+        padding: 12px;
+    }
+    
+    .bible-verse-display::before,
+    .bible-verse-display::after {
+        display: none;
+    }
+    
+    .verse-text p {
+        color: #333 !important;
+        font-size: 11pt;
+    }
+    
+    .verse-text cite {
+        color: #666 !important;
+        font-size: 10pt;
+    }
+    
+    /* Recipe on second page */
+    .recipe-display {
+        page-break-before: always;
+        background: white !important;
+        border: 2px solid #333;
+        border-radius: 12px;
+        padding: 20px;
+        margin-top: 0;
+    }
+    
+    .recipe-display h3 {
+        color: #333 !important;
+        font-size: 16pt;
+        margin-bottom: 15px;
+        text-align: center;
+        border-bottom: 1px solid #333;
+        padding-bottom: 8px;
+    }
+    
+    .recipe-display div {
+        color: #333 !important;
+        font-size: 11pt;
+        line-height: 1.4;
+    }
+    
+    .card-footer {
+        background: white !important;
+        border-top: 1px solid #333;
+        padding: 10px;
+        text-align: center;
+    }
+    
+    .achievement-date {
+        color: #666 !important;
+        font-size: 10pt;
+    }
+    
+    /* Ensure proper page breaks and sizing */
+    .card-content > .photo-display,
+    .card-content > .message-display {
+        page-break-inside: avoid;
+    }
+    
+    /* Remove animations and transforms for print */
+    * {
+        animation: none !important;
+        transition: none !important;
+        transform: none !important;
     }
 }
