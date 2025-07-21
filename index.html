@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cooking Celebration - Client Achievement</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Cooking Celebration</h1>
+            <p class="subtitle">Celebrating your culinary journey!</p>
+        </header>
+
+        <div class="form-section">
+            <form id="cookingForm">
+                <div class="input-group">
+                    <label for="photoUpload" class="form-label">
+                        <span class="label-text">Upload Your Photo</span>
+                        <span class="label-desc">Show off your cooking moment!</span>
+                    </label>
+                    <input type="file" id="photoUpload" accept="image/*" class="file-input">
+                    <div id="photoPreview" class="photo-preview hidden">
+                        <img id="previewImg" src="" alt="Preview">
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="supportMessage" class="form-label">
+                        <span class="label-text">Supportive Message</span>
+                        <span class="label-desc">Share encouragement and celebrate the achievement</span>
+                    </label>
+                    <textarea id="supportMessage" placeholder="You did an amazing job cooking today! Your skills are growing stronger every day..." rows="4" class="text-input"></textarea>
+                </div>
+
+                <div class="input-group">
+                    <div class="checkbox-wrapper">
+                        <input type="checkbox" id="includeRecipe" class="checkbox-input">
+                        <label for="includeRecipe" class="checkbox-label">Include Recipe</label>
+                    </div>
+                    <div class="checkbox-wrapper">
+                        <input type="checkbox" id="includeBibleVerse" class="checkbox-input" checked>
+                        <label for="includeBibleVerse" class="checkbox-label">Include Inspirational Bible Verse</label>
+                    </div>
+                </div>
+
+                <div id="recipeSection" class="input-group recipe-section hidden">
+                    <label for="recipeInput" class="form-label">
+                        <span class="label-text">Recipe</span>
+                        <span class="label-desc">Add the recipe you followed today</span>
+                    </label>
+                    <textarea id="recipeInput" placeholder="Recipe ingredients and instructions..." rows="6" class="text-input"></textarea>
+                </div>
+
+                <div class="button-group">
+                    <button type="button" id="generateBtn" class="btn btn-primary">Generate Celebration</button>
+                    <button type="button" id="printBtn" class="btn btn-secondary hidden">Print Celebration</button>
+                </div>
+            </form>
+        </div>
+
+        <div id="output" class="output-section hidden">
+            <div class="celebration-card">
+                <div class="card-header">
+                    <h2>Cooking Achievement Celebration!</h2>
+                </div>
+                
+                <div class="card-content">
+                    <div class="photo-display">
+                        <img id="outputPhoto" src="" alt="Cooking Achievement">
+                    </div>
+                    
+                    <div class="message-display">
+                        <h3>Congratulations!</h3>
+                        <p id="outputMessage"></p>
+                        
+                        <div id="bibleVerseDisplay" class="bible-verse-display hidden">
+                            <div class="verse-text">
+                                <p id="verseContent"></p>
+                                <cite id="verseReference"></cite>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="recipeDisplay" class="recipe-display hidden">
+                        <h3>Recipe Used</h3>
+                        <div id="outputRecipe"></div>
+                    </div>
+                </div>
+                
+                <div class="card-footer">
+                    <p class="achievement-date">Achievement Date: <span id="currentDate"></span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
