@@ -1,3 +1,6 @@
+/* Import handwritten fonts */
+@import url('https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&family=Caveat:wght@400;500;600;700&display=swap');
+
 /* Color Palette: Warm and encouraging with accessibility in mind */
 :root {
     --primary-color: #4A90E2;          /* Soft blue */
@@ -28,8 +31,6 @@ body {
     min-height: 100vh;
 }
 
-/* Import handwritten fonts */
-@import url('https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&family=Caveat:wght@400;500;600;700&display=swap');
 
 .container {
     max-width: 800px;
