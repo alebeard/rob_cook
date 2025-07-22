@@ -104,8 +104,30 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Function to fetch inspirational quotes for staff
     async function fetchInspirationalQuote() {
-        // Fallback quotes from philosophers, poets, writers, and thinkers
-        const fallbackQuotes = [
+        try {
+            // Use our Netlify function to get quotes (avoids CORS issues)
+            const response = await fetch('/.netlify/functions/get-quote', {
+                method: 'GET'
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                if (data.success && data.quote && data.quote.text && data.quote.author) {
+                    return {
+                        text: data.quote.text,
+                        author: data.quote.author
+                    };
+                }
+            }
+            
+            console.log('Quote function unavailable, using client fallback');
+            
+        } catch (error) {
+            console.log('Error fetching from quote function, using client fallback:', error.message);
+        }
+
+        // Client-side fallback quotes if function fails
+        const clientFallbackQuotes = [
             { text: "The best way to find yourself is to lose yourself in the service of others.", author: "Mahatma Gandhi" },
             { text: "Success is not the key to happiness. Happiness is the key to success.", author: "Albert Schweitzer" },
             { text: "Be yourself; everyone else is already taken.", author: "Oscar Wilde" },
@@ -114,44 +136,12 @@ document.addEventListener('DOMContentLoaded', function() {
             { text: "The future belongs to those who believe in the beauty of their dreams.", author: "Eleanor Roosevelt" },
             { text: "It is during our darkest moments that we must focus to see the light.", author: "Aristotle" },
             { text: "The way to get started is to quit talking and begin doing.", author: "Walt Disney" },
-            { text: "Life is what happens to you while you're busy making other plans.", author: "John Lennon" },
             { text: "The purpose of our lives is to be happy.", author: "Dalai Lama" },
-            { text: "Do not go where the path may lead, go instead where there is no path and leave a trail.", author: "Ralph Waldo Emerson" },
-            { text: "You miss 100% of the shots you don't take.", author: "Wayne Gretzky" },
-            { text: "Whether you think you can or you think you can't, you're right.", author: "Henry Ford" },
-            { text: "Two things are infinite: the universe and human stupidity; and I'm not sure about the universe.", author: "Albert Einstein" },
-            { text: "A room without books is like a body without a soul.", author: "Marcus Tullius Cicero" },
-            { text: "If you want to know what a man's like, take a good look at how he treats his inferiors, not his equals.", author: "J.K. Rowling" },
-            { text: "Live as if you were to die tomorrow. Learn as if you were to live forever.", author: "Mahatma Gandhi" },
-            { text: "We are what we repeatedly do. Excellence, then, is not an act, but a habit.", author: "Aristotle" },
-            { text: "The only impossible journey is the one you never begin.", author: "Tony Robbins" },
-            { text: "In this life we cannot do great things. We can only do small things with great love.", author: "Mother Teresa" }
+            { text: "Keep your face always toward the sunshine—and shadows will fall behind you.", author: "Walt Whitman" }
         ];
 
-        try {
-            // Try to fetch from ZenQuotes API (more reliable)
-            const response = await fetch('https://zenquotes.io/api/random', {
-                method: 'GET'
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                if (data && data.length > 0 && data[0].q && data[0].a) {
-                    return {
-                        text: data[0].q,
-                        author: data[0].a
-                    };
-                }
-            }
-            
-            console.log('ZenQuotes API unavailable, using fallback quote');
-            
-        } catch (error) {
-            console.log('Error fetching from ZenQuotes API, using fallback:', error.message);
-        }
-
-        // Use fallback quote if API fails
-        const randomFallback = fallbackQuotes[Math.floor(Math.random() * fallbackQuotes.length)];
+        // Use client fallback quote
+        const randomFallback = clientFallbackQuotes[Math.floor(Math.random() * clientFallbackQuotes.length)];
         return randomFallback;
     }
 
