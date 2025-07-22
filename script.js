@@ -367,10 +367,17 @@ document.addEventListener('DOMContentLoaded', function() {
             });
             const result = await response.json();
             
+            console.log('=== TEST INSERT RESULTS ===');
+            console.log('Full result:', result);
+            console.log('Table structure:', result.tableStructure);
+            if (result.insertError) {
+                console.log('Insert error:', result.insertError);
+            }
+            
             if (result.success) {
-                alert('Insert test successful!\n\nTable structure:\n' + JSON.stringify(result.tableStructure, null, 2));
+                alert('Insert test successful! Check console (F12) for table structure details.');
             } else {
-                alert('Insert test results:\n\n' + JSON.stringify(result, null, 2));
+                alert('Insert test failed. Check console (F12) for detailed error information.');
             }
         } catch (error) {
             alert('Test insert error: ' + error.message);
