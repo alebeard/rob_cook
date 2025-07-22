@@ -4,7 +4,8 @@ export const celebrations = pgTable('celebrations', {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
     clientName: varchar({ length: 255 }),
     supportiveMessage: text().notNull(),
-    recipe: text(),
+    activityDetails: text(),
+    documents: text(), // JSON string containing uploaded document data
     bibleVerse: text(),
     bibleReference: varchar({ length: 100 }),
     photoUrl: text(),

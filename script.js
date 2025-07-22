@@ -1,20 +1,23 @@
-// Cooking Celebration App JavaScript
+// Activities Journal App JavaScript
 document.addEventListener('DOMContentLoaded', function() {
     // Get all the DOM elements
     const photoUpload = document.getElementById('photoUpload');
     const photoPreview = document.getElementById('photoPreview');
     const previewImg = document.getElementById('previewImg');
     const supportMessage = document.getElementById('supportMessage');
-    const includeRecipe = document.getElementById('includeRecipe');
-    const recipeSection = document.getElementById('recipeSection');
-    const recipeInput = document.getElementById('recipeInput');
+    const includeDocuments = document.getElementById('includeDocuments');
+    const documentsSection = document.getElementById('documentsSection');
+    const activityDetails = document.getElementById('activityDetails');
+    const documentUpload = document.getElementById('documentUpload');
+    const documentPreview = document.getElementById('documentPreview');
     const generateBtn = document.getElementById('generateBtn');
     const printBtn = document.getElementById('printBtn');
     const outputSection = document.getElementById('output');
     const outputPhoto = document.getElementById('outputPhoto');
     const outputMessage = document.getElementById('outputMessage');
-    const recipeDisplay = document.getElementById('recipeDisplay');
-    const outputRecipe = document.getElementById('outputRecipe');
+    const documentsDisplay = document.getElementById('documentsDisplay');
+    const outputActivityDetails = document.getElementById('outputActivityDetails');
+    const outputDocuments = document.getElementById('outputDocuments');
     const currentDate = document.getElementById('currentDate');
     const includeBibleVerse = document.getElementById('includeBibleVerse');
     const bibleVerseDisplay = document.getElementById('bibleVerseDisplay');
@@ -70,21 +73,24 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Handle recipe checkbox toggle
-    includeRecipe.addEventListener('change', function() {
+    // Handle documents checkbox toggle
+    includeDocuments.addEventListener('change', function() {
         if (this.checked) {
-            recipeSection.classList.remove('hidden');
+            documentsSection.classList.remove('hidden');
             // Add smooth slide-down effect
-            recipeSection.style.opacity = '0';
-            recipeSection.style.transform = 'translateY(-10px)';
+            documentsSection.style.opacity = '0';
+            documentsSection.style.transform = 'translateY(-10px)';
             setTimeout(() => {
-                recipeSection.style.transition = 'all 0.3s ease';
-                recipeSection.style.opacity = '1';
-                recipeSection.style.transform = 'translateY(0)';
+                documentsSection.style.transition = 'all 0.3s ease';
+                documentsSection.style.opacity = '1';
+                documentsSection.style.transform = 'translateY(0)';
             }, 10);
         } else {
-            recipeSection.classList.add('hidden');
-            recipeInput.value = ''; // Clear recipe input when hidden
+            documentsSection.classList.add('hidden');
+            activityDetails.value = ''; // Clear activity details when hidden
+            documentUpload.value = ''; // Clear document upload when hidden
+            uploadedDocuments = [];
+            documentPreview.classList.add('hidden');
         }
     });
 
@@ -100,6 +106,68 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error('Error loading header quote:', error);
             // Keep default text if quote fails to load
         }
+    }
+
+    let uploadedDocuments = [];
+
+    // Handle document upload and preview
+    documentUpload.addEventListener('change', function(event) {
+        const files = Array.from(event.target.files);
+        uploadedDocuments = [];
+        documentPreview.innerHTML = '';
+        
+        if (files.length > 0) {
+            files.forEach((file, index) => {
+                // Check file size (limit to 10MB per file)
+                if (file.size > 10 * 1024 * 1024) {
+                    alert(`File "${file.name}" is too large. Please select files smaller than 10MB.`);
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const docData = {
+                        name: file.name,
+                        type: file.type,
+                        data: e.target.result
+                    };
+                    uploadedDocuments.push(docData);
+                    
+                    // Create preview element
+                    const previewItem = document.createElement('div');
+                    previewItem.className = 'document-item';
+                    previewItem.innerHTML = `
+                        <span class="doc-icon">${getFileIcon(file.type)}</span>
+                        <span class="doc-name">${file.name}</span>
+                        <span class="doc-size">(${formatFileSize(file.size)})</span>
+                    `;
+                    documentPreview.appendChild(previewItem);
+                    
+                    if (index === 0) {
+                        documentPreview.classList.remove('hidden');
+                    }
+                };
+                reader.readAsDataURL(file);
+            });
+        } else {
+            documentPreview.classList.add('hidden');
+        }
+    });
+
+    function getFileIcon(fileType) {
+        if (fileType.startsWith('image/')) return '🖼️';
+        if (fileType.includes('pdf')) return '📄';
+        if (fileType.includes('word') || fileType.includes('doc')) return '📝';
+        if (fileType.includes('text')) return '📃';
+        return '📎';
+    }
+
+    function formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
     }
 
     // Function to fetch inspirational quotes for staff
@@ -306,12 +374,53 @@ document.addEventListener('DOMContentLoaded', function() {
         // Set the message
         outputMessage.textContent = supportMessage.value.trim();
         
-        // Handle recipe display
-        if (includeRecipe.checked && recipeInput.value.trim()) {
-            outputRecipe.textContent = recipeInput.value.trim();
-            recipeDisplay.classList.remove('hidden');
+        // Handle documents and activity details display
+        if (includeDocuments.checked && (activityDetails.value.trim() || uploadedDocuments.length > 0)) {
+            // Display activity details text
+            if (activityDetails.value.trim()) {
+                outputActivityDetails.textContent = activityDetails.value.trim();
+            } else {
+                outputActivityDetails.textContent = '';
+            }
+            
+            // Display uploaded documents
+            outputDocuments.innerHTML = '';
+            if (uploadedDocuments.length > 0) {
+                const docsHeader = document.createElement('h4');
+                docsHeader.textContent = 'Memory Documents:';
+                outputDocuments.appendChild(docsHeader);
+                
+                uploadedDocuments.forEach(doc => {
+                    const docItem = document.createElement('div');
+                    docItem.className = 'output-document-item';
+                    
+                    if (doc.type.startsWith('image/')) {
+                        // Show image preview
+                        const img = document.createElement('img');
+                        img.src = doc.data;
+                        img.alt = doc.name;
+                        img.style.maxWidth = '200px';
+                        img.style.maxHeight = '150px';
+                        img.style.borderRadius = '8px';
+                        img.style.marginBottom = '10px';
+                        docItem.appendChild(img);
+                    } else {
+                        // Show file icon and name
+                        const fileInfo = document.createElement('div');
+                        fileInfo.innerHTML = `
+                            <span style="font-size: 24px; margin-right: 10px;">${getFileIcon(doc.type)}</span>
+                            <span>${doc.name}</span>
+                        `;
+                        docItem.appendChild(fileInfo);
+                    }
+                    
+                    outputDocuments.appendChild(docItem);
+                });
+            }
+            
+            documentsDisplay.classList.remove('hidden');
         } else {
-            recipeDisplay.classList.add('hidden');
+            documentsDisplay.classList.add('hidden');
         }
         
         // Handle Bible verse display
@@ -401,15 +510,15 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Add recipe character count
-    recipeInput.addEventListener('input', function() {
-        const maxLength = 1000;
+    // Add activity details character count
+    activityDetails.addEventListener('input', function() {
+        const maxLength = 2000;
         const currentLength = this.value.length;
         
-        let counter = document.getElementById('recipeCounter');
+        let counter = document.getElementById('activityDetailsCounter');
         if (!counter) {
             counter = document.createElement('div');
-            counter.id = 'recipeCounter';
+            counter.id = 'activityDetailsCounter';
             counter.style.cssText = `
                 font-size: 0.8rem;
                 color: var(--text-light);
@@ -503,7 +612,8 @@ document.addEventListener('DOMContentLoaded', function() {
             const celebrationData = {
                 clientName: null, // Can be extended later
                 supportiveMessage: supportMessage.value.trim(),
-                recipe: (includeRecipe.checked && recipeInput.value.trim()) ? recipeInput.value.trim() : null,
+                activityDetails: (includeDocuments.checked && activityDetails.value.trim()) ? activityDetails.value.trim() : null,
+                documents: (includeDocuments.checked && uploadedDocuments.length > 0) ? JSON.stringify(uploadedDocuments) : null,
                 bibleVerse: (includeBibleVerse.checked && currentBibleVerse) ? currentBibleVerse.text : null,
                 bibleReference: (includeBibleVerse.checked && currentBibleVerse) ? currentBibleVerse.reference : null,
                 photoUrl: uploadedPhotoSrc, // This is the base64 data URL for now

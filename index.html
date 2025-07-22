@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cooking Celebration - Client Achievement</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍳</text></svg>">
+    <title>Activities Journal - Memory Creator</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📝</text></svg>">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>Cooking Celebration</h1>
+            <h1>Activities Journal</h1>
             <p class="subtitle" id="headerQuote">
-                <em id="quoteText">Celebrating your culinary journey!</em>
+                <em id="quoteText">Capturing life's memorable moments!</em>
                 <span id="quoteAttribution"></span>
             </p>
         </header>
@@ -22,7 +22,7 @@
                 <div class="input-group">
                     <label for="photoUpload" class="form-label">
                         <span class="label-text">Upload Your Photo</span>
-                        <span class="label-desc">Show off your cooking moment!</span>
+                        <span class="label-desc">Capture your activity moment!</span>
                     </label>
                     <input type="file" id="photoUpload" accept="image/*" class="file-input">
                     <div id="photoPreview" class="photo-preview hidden">
@@ -40,8 +40,8 @@
 
                 <div class="input-group">
                     <div class="checkbox-wrapper">
-                        <input type="checkbox" id="includeRecipe" class="checkbox-input">
-                        <label for="includeRecipe" class="checkbox-label">Include Recipe</label>
+                        <input type="checkbox" id="includeDocuments" class="checkbox-input">
+                        <label for="includeDocuments" class="checkbox-label">Include Additional Documents</label>
                     </div>
                     <div class="checkbox-wrapper">
                         <input type="checkbox" id="includeBibleVerse" class="checkbox-input" checked>
@@ -49,12 +49,19 @@
                     </div>
                 </div>
 
-                <div id="recipeSection" class="input-group recipe-section hidden">
-                    <label for="recipeInput" class="form-label">
-                        <span class="label-text">Recipe</span>
-                        <span class="label-desc">Add the recipe you followed today</span>
+                <div id="documentsSection" class="input-group documents-section hidden">
+                    <label for="activityDetails" class="form-label">
+                        <span class="label-text">Activity Details</span>
+                        <span class="label-desc">Add details about your experience, trip, or activity</span>
                     </label>
-                    <textarea id="recipeInput" placeholder="Recipe ingredients and instructions..." rows="6" class="text-input"></textarea>
+                    <textarea id="activityDetails" placeholder="Describe your activity, experience, or trip details..." rows="8" class="text-input"></textarea>
+                    
+                    <label for="documentUpload" class="form-label">
+                        <span class="label-text">Upload Documents</span>
+                        <span class="label-desc">Add menus, flyers, tickets, or other memory keepsakes</span>
+                    </label>
+                    <input type="file" id="documentUpload" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx,.txt" multiple class="file-input">
+                    <div id="documentPreview" class="document-preview hidden"></div>
                 </div>
 
 
@@ -68,12 +75,12 @@
         <div id="output" class="output-section hidden">
             <div class="celebration-card">
                 <div class="card-header">
-                    <h2>Cooking Achievement Celebration!</h2>
+                    <h2>Activity Memory Celebration!</h2>
                 </div>
                 
                 <div class="card-content">
                     <div class="photo-display">
-                        <img id="outputPhoto" src="" alt="Cooking Achievement">
+                        <img id="outputPhoto" src="" alt="Activity Memory">
                     </div>
                     
                     <div class="message-display">
@@ -91,9 +98,10 @@
                         </div>
                     </div>
                     
-                    <div id="recipeDisplay" class="recipe-display hidden">
-                        <h3>Recipe Used</h3>
-                        <div id="outputRecipe"></div>
+                    <div id="documentsDisplay" class="documents-display hidden">
+                        <h3>Activity Details</h3>
+                        <div id="outputActivityDetails"></div>
+                        <div id="outputDocuments" class="uploaded-documents"></div>
                     </div>
                 </div>
                 

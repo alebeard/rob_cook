@@ -486,6 +486,99 @@ header h1 {
     box-shadow: none;
 }
 
+/* Documents Section Styles */
+.documents-display {
+    background: #FFFBF0;
+    padding: 20px;
+    border-radius: 12px;
+    border-left: 4px solid var(--accent-color);
+}
+
+.documents-display h3 {
+    color: var(--accent-color);
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+}
+
+.documents-display div {
+    white-space: pre-wrap;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--text-primary);
+}
+
+/* Document Preview and Upload Styles */
+.document-preview {
+    margin-top: 15px;
+    padding: 15px;
+    background: var(--background-color);
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+
+.document-item {
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    margin-bottom: 8px;
+    background: white;
+    border-radius: 6px;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.doc-icon {
+    font-size: 20px;
+    margin-right: 10px;
+}
+
+.doc-name {
+    flex: 1;
+    font-size: 0.9rem;
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+.doc-size {
+    font-size: 0.8rem;
+    color: var(--text-light);
+    margin-left: 10px;
+}
+
+/* Output Document Styles */
+.uploaded-documents {
+    margin-top: 15px;
+}
+
+.uploaded-documents h4 {
+    color: var(--accent-color);
+    font-size: 1.2rem;
+    margin-bottom: 12px;
+}
+
+.output-document-item {
+    margin-bottom: 15px;
+    padding: 12px;
+    background: rgba(245, 166, 35, 0.1);
+    border-radius: 8px;
+    border-left: 3px solid var(--accent-color);
+}
+
+.output-document-item img {
+    display: block;
+    max-width: 100%;
+    border-radius: 6px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.output-document-item > div {
+    display: flex;
+    align-items: center;
+    font-size: 1rem;
+    color: var(--text-primary);
+}
+
+/* Legacy recipe styles (now documents-display) */
 .recipe-display {
     background: #FFFBF0;
     padding: 20px;
