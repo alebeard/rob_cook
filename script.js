@@ -21,10 +21,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const verseContent = document.getElementById('verseContent');
     const verseReference = document.getElementById('verseReference');
     const regenerateVerse = document.getElementById('regenerateVerse');
-    const includeSecularQuote = document.getElementById('includeSecularQuote');
-    const staffQuoteSection = document.getElementById('staffQuoteSection');
-    const staffQuoteText = document.getElementById('staffQuoteText');
-    const staffQuoteAuthor = document.getElementById('staffQuoteAuthor');
+    const quoteText = document.getElementById('quoteText');
+    const quoteAttribution = document.getElementById('quoteAttribution');
 
     let uploadedPhotoSrc = '';
     let currentBibleVerse = null;
@@ -90,43 +88,19 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Handle secular quote checkbox toggle
-    includeSecularQuote.addEventListener('change', async function() {
-        if (this.checked) {
-            staffQuoteSection.classList.remove('hidden');
-            
-            // Show loading state
-            staffQuoteText.textContent = 'Loading inspirational quote...';
-            staffQuoteAuthor.textContent = '';
-            
-            // Add smooth slide-down effect
-            staffQuoteSection.style.opacity = '0';
-            staffQuoteSection.style.transform = 'translateY(-10px)';
-            setTimeout(() => {
-                staffQuoteSection.style.transition = 'all 0.3s ease';
-                staffQuoteSection.style.opacity = '1';
-                staffQuoteSection.style.transform = 'translateY(0)';
-            }, 10);
-            
-            // Fetch a quote for staff
-            try {
-                currentStaffQuote = await fetchInspirationalQuote();
-                if (currentStaffQuote) {
-                    staffQuoteText.textContent = `"${currentStaffQuote.text}"`;
-                    staffQuoteAuthor.textContent = `— ${currentStaffQuote.author}`;
-                } else {
-                    staffQuoteText.textContent = '"The best way to find yourself is to lose yourself in the service of others."';
-                    staffQuoteAuthor.textContent = '— Mahatma Gandhi';
-                }
-            } catch (error) {
-                console.error('Error fetching staff quote:', error);
-                staffQuoteText.textContent = '"Success is not the key to happiness. Happiness is the key to success."';
-                staffQuoteAuthor.textContent = '— Albert Schweitzer';
+    // Load inspirational quote in header on page load
+    async function loadHeaderQuote() {
+        try {
+            const quote = await fetchInspirationalQuote();
+            if (quote) {
+                quoteText.textContent = `"${quote.text}"`;
+                quoteAttribution.textContent = `— ${quote.author}`;
             }
-        } else {
-            staffQuoteSection.classList.add('hidden');
+        } catch (error) {
+            console.error('Error loading header quote:', error);
+            // Keep default text if quote fails to load
         }
-    });
+    }
 
     // Function to fetch inspirational quotes for staff
     async function fetchInspirationalQuote() {
@@ -643,4 +617,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Initialize message counter
     supportMessage.dispatchEvent(new Event('input'));
+    
+    // Load inspirational quote in header
+    loadHeaderQuote();
 });

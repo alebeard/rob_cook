@@ -53,9 +53,24 @@ header h1 {
 }
 
 .subtitle {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     color: var(--text-secondary);
     font-weight: 300;
+    line-height: 1.5;
+    margin-top: 10px;
+}
+
+.subtitle em {
+    font-style: italic;
+    color: var(--text-primary);
+}
+
+#quoteAttribution {
+    display: block;
+    font-size: 0.9rem;
+    color: var(--text-light);
+    margin-top: 5px;
+    font-weight: 400;
 }
 
 /* Form Section */
@@ -175,59 +190,6 @@ header h1 {
     border: 1px solid var(--border-color);
 }
 
-/* Staff Quote Section - For Staff Eyes Only */
-.staff-quote-section {
-    background: linear-gradient(135deg, #f8f5ff 0%, #e8f2ff 50%, #fff0f8 100%);
-    border: 2px solid #9b59b6;
-    border-radius: 15px;
-    padding: 20px;
-    margin: 25px 0;
-    box-shadow: 0 6px 15px rgba(155, 89, 182, 0.2);
-    position: relative;
-    overflow: hidden;
-}
-
-.staff-quote-section::before {
-    content: '✨';
-    position: absolute;
-    top: 10px;
-    right: 15px;
-    font-size: 1.5rem;
-    opacity: 0.7;
-}
-
-.staff-quote-display h4 {
-    color: #8e44ad;
-    font-family: 'Caveat', cursive;
-    font-size: 1.4rem;
-    margin-bottom: 15px;
-    text-align: center;
-    font-weight: 600;
-}
-
-.quote-content {
-    text-align: center;
-    padding: 10px;
-}
-
-.quote-content p {
-    font-family: 'Kalam', cursive;
-    font-size: 1.1rem;
-    color: #2c3e50;
-    line-height: 1.6;
-    margin-bottom: 10px;
-    font-style: italic;
-}
-
-.quote-content cite {
-    font-family: 'Caveat', cursive;
-    font-size: 1rem;
-    color: #8e44ad;
-    font-weight: 500;
-    display: block;
-    text-align: right;
-    padding-right: 10px;
-}
 
 /* Button Styling */
 .button-group {
@@ -599,7 +561,7 @@ header h1 {
         print-color-adjust: exact;
     }
     
-    .form-section, .button-group, .staff-quote-section {
+    .form-section, .button-group {
         display: none !important;
     }
     
