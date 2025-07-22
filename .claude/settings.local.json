@@ -14,7 +14,8 @@
       "Bash(npm init:*)",
       "Bash(git reset:*)",
       "Bash(npx drizzle-kit:*)",
-      "WebFetch(domain:zenquotes.io)"
+      "WebFetch(domain:zenquotes.io)",
+      "Bash(npm run dev:*)"
     ],
     "deny": []
   }

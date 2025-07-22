@@ -26,6 +26,7 @@ export const handler: Handler = async (event, context) => {
     // Check if database connection is available
     if (!process.env.NETLIFY_DATABASE_URL) {
       console.error('NETLIFY_DATABASE_URL environment variable not set');
+      console.error('Available environment variables:', Object.keys(process.env).filter(key => key.includes('NETLIFY')));
       return {
         statusCode: 500,
         headers,
@@ -35,6 +36,8 @@ export const handler: Handler = async (event, context) => {
         }),
       };
     }
+
+    console.log('Database URL configured, attempting database operations...');
 
     const body = JSON.parse(event.body || '{}');
     const {
