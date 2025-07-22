@@ -23,8 +23,11 @@ export const handler: Handler = async (event, context) => {
     }
 
     // Dynamic imports to catch import errors
-    const { db } = await import('../../db/index');
+    const { createDb } = await import('../../db/index');
     const { celebrations } = await import('../../db/schema');
+    
+    // Create database connection
+    const db = createDb();
 
     // Check if database connection is available
     if (!process.env.NETLIFY_DATABASE_URL) {
