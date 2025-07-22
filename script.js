@@ -158,7 +158,8 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
 
-        // Generate the celebration card
+        // Save to database and generate the celebration card
+        await saveCelebrationToDatabase();
         generateCelebration();
     });
 
@@ -363,6 +364,84 @@ document.addEventListener('DOMContentLoaded', function() {
     generateBtn.title = 'Generate celebration card (Ctrl+Enter)';
     printBtn.title = 'Print celebration card (Ctrl+P)';
     
+    // Database Integration Functions
+    async function saveCelebrationToDatabase() {
+        try {
+            generateBtn.textContent = 'Saving...';
+            generateBtn.disabled = true;
+            
+            const celebrationData = {
+                clientName: null, // Can be extended later
+                supportiveMessage: supportMessage.value.trim(),
+                recipe: (includeRecipe.checked && recipeInput.value.trim()) ? recipeInput.value.trim() : null,
+                bibleVerse: (includeBibleVerse.checked && currentBibleVerse) ? currentBibleVerse.text : null,
+                bibleReference: (includeBibleVerse.checked && currentBibleVerse) ? currentBibleVerse.reference : null,
+                photoUrl: uploadedPhotoSrc, // This is the base64 data URL for now
+                createdBy: null // Can be extended later for multi-user support
+            };
+
+            const response = await fetch('/.netlify/functions/save-celebration', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(celebrationData)
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Failed to save celebration');
+            }
+
+            const result = await response.json();
+            console.log('Celebration saved successfully:', result);
+            
+            // Show success feedback
+            const originalText = generateBtn.textContent;
+            generateBtn.textContent = 'Saved!';
+            setTimeout(() => {
+                generateBtn.textContent = originalText;
+            }, 2000);
+            
+        } catch (error) {
+            console.error('Error saving celebration:', error);
+            alert('Note: Could not save to database, but you can still print your celebration.');
+        } finally {
+            generateBtn.textContent = 'Generate Celebration';
+            generateBtn.disabled = false;
+        }
+    }
+
+    async function loadRecentCelebrations() {
+        try {
+            const response = await fetch('/.netlify/functions/get-celebrations');
+            
+            if (!response.ok) {
+                throw new Error('Failed to load celebrations');
+            }
+
+            const result = await response.json();
+            return result.celebrations || [];
+        } catch (error) {
+            console.error('Error loading celebrations:', error);
+            return [];
+        }
+    }
+
+    // Optional: Add a button to view recent celebrations (can be implemented later)
+    function createHistoryButton() {
+        const historyBtn = document.createElement('button');
+        historyBtn.textContent = 'View Recent Celebrations';
+        historyBtn.className = 'btn btn-secondary';
+        historyBtn.style.display = 'none'; // Hidden for now, can be enabled later
+        historyBtn.onclick = async () => {
+            const celebrations = await loadRecentCelebrations();
+            console.log('Recent celebrations:', celebrations);
+            // Could implement a modal or new page to display these
+        };
+        return historyBtn;
+    }
+
     // Initialize message counter
     supportMessage.dispatchEvent(new Event('input'));
 });

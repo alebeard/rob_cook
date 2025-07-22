@@ -1,0 +1,21 @@
+[build]
+  command = "npm run build"
+  functions = "netlify/functions"
+  publish = "."
+
+[functions]
+  node_bundler = "esbuild"
+
+[[plugins]]
+  package = "@netlify/plugin-neon"
+
+[dev]
+  command = "npx http-server . -p 8888"
+  port = 8888
+  
+# Redirect all requests to index.html for SPA behavior
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+  conditions = {Role = [""]}
