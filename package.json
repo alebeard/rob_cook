@@ -25,5 +25,10 @@
     "@netlify/neon": "^0.1.0",
     "@types/node": "^24.0.15",
     "drizzle-orm": "^0.44.3"
+  },
+  "devDependencies": {
+    "@netlify/functions": "^4.1.13",
+    "drizzle-kit": "^0.31.4",
+    "typescript": "^5.8.3"
   }
 }
