@@ -244,6 +244,8 @@ export const handler: Handler = async (event, context) => {
       body: JSON.stringify({ 
         error: 'Failed to save celebration',
         details: error instanceof Error ? error.message : 'Unknown error',
+        stack: error instanceof Error ? error.stack?.substring(0, 1000) : 'No stack trace',
+        errorType: error?.constructor?.name || 'Unknown',
         timestamp: new Date().toISOString()
       }),
     };

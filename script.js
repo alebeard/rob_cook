@@ -355,6 +355,34 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    // Handle database rebuild functionality
+    const rebuildDbBtn = document.getElementById('rebuildDbBtn');
+    rebuildDbBtn.addEventListener('click', async function() {
+        const confirmed = confirm('This will completely rebuild the database schema and delete all existing data. Are you sure?');
+        if (!confirmed) return;
+        
+        try {
+            rebuildDbBtn.textContent = 'Rebuilding...';
+            rebuildDbBtn.disabled = true;
+            
+            const response = await fetch('/.netlify/functions/rebuild-database', {
+                method: 'POST'
+            });
+            const result = await response.json();
+            
+            if (response.ok) {
+                alert('Database rebuilt successfully!\n\n' + JSON.stringify(result, null, 2));
+            } else {
+                alert('Database rebuild failed!\n\n' + JSON.stringify(result, null, 2));
+            }
+        } catch (error) {
+            alert('Database rebuild error: ' + error.message);
+        } finally {
+            rebuildDbBtn.textContent = 'Rebuild Database Schema';
+            rebuildDbBtn.disabled = false;
+        }
+    });
+
     // Handle print functionality
     printBtn.addEventListener('click', function() {
         window.print();
@@ -653,6 +681,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             if (!response.ok) {
                 const errorData = await response.json();
+                console.error('Detailed error from server:', errorData);
                 throw new Error(errorData.error || 'Failed to save celebration');
             }
 
