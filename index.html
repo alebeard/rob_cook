@@ -41,6 +41,10 @@
                         <label for="includeRecipe" class="checkbox-label">Include Recipe</label>
                     </div>
                     <div class="checkbox-wrapper">
+                        <input type="checkbox" id="includeSecularQuote" class="checkbox-input">
+                        <label for="includeSecularQuote" class="checkbox-label">Include Inspirational Quote (Secular)</label>
+                    </div>
+                    <div class="checkbox-wrapper">
                         <input type="checkbox" id="includeBibleVerse" class="checkbox-input" checked>
                         <label for="includeBibleVerse" class="checkbox-label">Include Inspirational Bible Verse</label>
                     </div>
@@ -52,6 +56,17 @@
                         <span class="label-desc">Add the recipe you followed today</span>
                     </label>
                     <textarea id="recipeInput" placeholder="Recipe ingredients and instructions..." rows="6" class="text-input"></textarea>
+                </div>
+
+                <!-- Staff Inspiration Section -->
+                <div id="staffQuoteSection" class="staff-quote-section hidden">
+                    <div class="staff-quote-display">
+                        <h4>💫 For You, Our Amazing Staff</h4>
+                        <div class="quote-content">
+                            <p id="staffQuoteText"></p>
+                            <cite id="staffQuoteAuthor"></cite>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="button-group">

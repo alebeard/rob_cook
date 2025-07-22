@@ -21,9 +21,14 @@ document.addEventListener('DOMContentLoaded', function() {
     const verseContent = document.getElementById('verseContent');
     const verseReference = document.getElementById('verseReference');
     const regenerateVerse = document.getElementById('regenerateVerse');
+    const includeSecularQuote = document.getElementById('includeSecularQuote');
+    const staffQuoteSection = document.getElementById('staffQuoteSection');
+    const staffQuoteText = document.getElementById('staffQuoteText');
+    const staffQuoteAuthor = document.getElementById('staffQuoteAuthor');
 
     let uploadedPhotoSrc = '';
     let currentBibleVerse = null;
+    let currentStaffQuote = null;
 
     // Handle photo upload and preview
     photoUpload.addEventListener('change', function(event) {
@@ -84,6 +89,97 @@ document.addEventListener('DOMContentLoaded', function() {
             recipeInput.value = ''; // Clear recipe input when hidden
         }
     });
+
+    // Handle secular quote checkbox toggle
+    includeSecularQuote.addEventListener('change', async function() {
+        if (this.checked) {
+            staffQuoteSection.classList.remove('hidden');
+            
+            // Show loading state
+            staffQuoteText.textContent = 'Loading inspirational quote...';
+            staffQuoteAuthor.textContent = '';
+            
+            // Add smooth slide-down effect
+            staffQuoteSection.style.opacity = '0';
+            staffQuoteSection.style.transform = 'translateY(-10px)';
+            setTimeout(() => {
+                staffQuoteSection.style.transition = 'all 0.3s ease';
+                staffQuoteSection.style.opacity = '1';
+                staffQuoteSection.style.transform = 'translateY(0)';
+            }, 10);
+            
+            // Fetch a quote for staff
+            try {
+                currentStaffQuote = await fetchInspirationalQuote();
+                if (currentStaffQuote) {
+                    staffQuoteText.textContent = `"${currentStaffQuote.text}"`;
+                    staffQuoteAuthor.textContent = `— ${currentStaffQuote.author}`;
+                } else {
+                    staffQuoteText.textContent = '"The best way to find yourself is to lose yourself in the service of others."';
+                    staffQuoteAuthor.textContent = '— Mahatma Gandhi';
+                }
+            } catch (error) {
+                console.error('Error fetching staff quote:', error);
+                staffQuoteText.textContent = '"Success is not the key to happiness. Happiness is the key to success."';
+                staffQuoteAuthor.textContent = '— Albert Schweitzer';
+            }
+        } else {
+            staffQuoteSection.classList.add('hidden');
+        }
+    });
+
+    // Function to fetch inspirational quotes for staff
+    async function fetchInspirationalQuote() {
+        // Fallback quotes from philosophers, poets, writers, and thinkers
+        const fallbackQuotes = [
+            { text: "The best way to find yourself is to lose yourself in the service of others.", author: "Mahatma Gandhi" },
+            { text: "Success is not the key to happiness. Happiness is the key to success.", author: "Albert Schweitzer" },
+            { text: "Be yourself; everyone else is already taken.", author: "Oscar Wilde" },
+            { text: "The only way to do great work is to love what you do.", author: "Steve Jobs" },
+            { text: "In the middle of difficulty lies opportunity.", author: "Albert Einstein" },
+            { text: "The future belongs to those who believe in the beauty of their dreams.", author: "Eleanor Roosevelt" },
+            { text: "It is during our darkest moments that we must focus to see the light.", author: "Aristotle" },
+            { text: "The way to get started is to quit talking and begin doing.", author: "Walt Disney" },
+            { text: "Life is what happens to you while you're busy making other plans.", author: "John Lennon" },
+            { text: "The purpose of our lives is to be happy.", author: "Dalai Lama" },
+            { text: "Do not go where the path may lead, go instead where there is no path and leave a trail.", author: "Ralph Waldo Emerson" },
+            { text: "You miss 100% of the shots you don't take.", author: "Wayne Gretzky" },
+            { text: "Whether you think you can or you think you can't, you're right.", author: "Henry Ford" },
+            { text: "Two things are infinite: the universe and human stupidity; and I'm not sure about the universe.", author: "Albert Einstein" },
+            { text: "A room without books is like a body without a soul.", author: "Marcus Tullius Cicero" },
+            { text: "If you want to know what a man's like, take a good look at how he treats his inferiors, not his equals.", author: "J.K. Rowling" },
+            { text: "Live as if you were to die tomorrow. Learn as if you were to live forever.", author: "Mahatma Gandhi" },
+            { text: "We are what we repeatedly do. Excellence, then, is not an act, but a habit.", author: "Aristotle" },
+            { text: "The only impossible journey is the one you never begin.", author: "Tony Robbins" },
+            { text: "In this life we cannot do great things. We can only do small things with great love.", author: "Mother Teresa" }
+        ];
+
+        try {
+            // Try to fetch from Quotable API
+            const response = await fetch('https://api.quotable.io/random?tags=inspirational|motivational|wisdom|success&minLength=50&maxLength=150', {
+                method: 'GET'
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                if (data.content && data.author) {
+                    return {
+                        text: data.content,
+                        author: data.author
+                    };
+                }
+            }
+            
+            console.log('Quotable API unavailable, using fallback quote');
+            
+        } catch (error) {
+            console.log('Error fetching from Quotable API, using fallback:', error.message);
+        }
+
+        // Use fallback quote if API fails
+        const randomFallback = fallbackQuotes[Math.floor(Math.random() * fallbackQuotes.length)];
+        return randomFallback;
+    }
 
     // Function to fetch random Bible verse
     async function fetchRandomBibleVerse() {
