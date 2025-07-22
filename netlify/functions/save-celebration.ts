@@ -1,6 +1,4 @@
 import { Handler } from '@netlify/functions';
-import { db } from '../../db/index';
-import { celebrations } from '../../db/schema';
 
 export const handler: Handler = async (event, context) => {
   // Enable CORS
@@ -10,19 +8,24 @@ export const handler: Handler = async (event, context) => {
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
   };
 
-  if (event.httpMethod === 'OPTIONS') {
-    return { statusCode: 200, headers };
-  }
-
-  if (event.httpMethod !== 'POST') {
-    return {
-      statusCode: 405,
-      headers,
-      body: JSON.stringify({ error: 'Method not allowed' }),
-    };
-  }
-
+  // Wrap everything in try-catch to ensure JSON response
   try {
+    if (event.httpMethod === 'OPTIONS') {
+      return { statusCode: 200, headers };
+    }
+
+    if (event.httpMethod !== 'POST') {
+      return {
+        statusCode: 405,
+        headers,
+        body: JSON.stringify({ error: 'Method not allowed' }),
+      };
+    }
+
+    // Dynamic imports to catch import errors
+    const { db } = await import('../../db/index');
+    const { celebrations } = await import('../../db/schema');
+
     // Check if database connection is available
     if (!process.env.NETLIFY_DATABASE_URL) {
       console.error('NETLIFY_DATABASE_URL environment variable not set');
@@ -176,6 +179,18 @@ export const handler: Handler = async (event, context) => {
       body: JSON.stringify({ 
         error: 'Failed to save celebration',
         details: error instanceof Error ? error.message : 'Unknown error',
+        timestamp: new Date().toISOString()
+      }),
+    };
+  } catch (criticalError) {
+    // Catch any errors from imports or other critical failures
+    console.error('Critical error in save-celebration function:', criticalError);
+    return {
+      statusCode: 500,
+      headers,
+      body: JSON.stringify({
+        error: 'Function initialization failed',
+        details: criticalError instanceof Error ? criticalError.message : 'Unknown critical error',
         timestamp: new Date().toISOString()
       }),
     };
