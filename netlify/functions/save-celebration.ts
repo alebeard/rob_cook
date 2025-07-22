@@ -60,24 +60,79 @@ export const handler: Handler = async (event, context) => {
     
     // First, try to ensure the table exists by creating it if it doesn't
     try {
-      await db.execute(`
-        CREATE TABLE IF NOT EXISTS "celebrations" (
-          "id" integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-          "clientName" varchar(255),
-          "supportiveMessage" text NOT NULL,
-          "activityDetails" text,
-          "documents" text,
-          "bibleVerse" text,
-          "bibleReference" varchar(100),
-          "photoUrl" text,
-          "createdAt" timestamp DEFAULT now() NOT NULL,
-          "createdBy" varchar(255)
-        );
-      `);
-      console.log('Table creation/verification successful');
+      // Check if table exists and what columns it has
+      let tableExists = false;
+      let hasActivityDetails = false;
+      let hasDocuments = false;
+      
+      try {
+        const tableInfo = await db.execute(`
+          SELECT column_name 
+          FROM information_schema.columns 
+          WHERE table_name = 'celebrations';
+        `);
+        
+        tableExists = tableInfo.length > 0;
+        hasActivityDetails = tableInfo.some((row: any) => row.column_name === 'activityDetails');
+        hasDocuments = tableInfo.some((row: any) => row.column_name === 'documents');
+        
+        console.log('Table status:', { tableExists, hasActivityDetails, hasDocuments });
+        
+        // Add missing columns if table exists but columns are missing
+        if (tableExists) {
+          if (!hasActivityDetails) {
+            await db.execute('ALTER TABLE "celebrations" ADD COLUMN "activityDetails" text');
+            console.log('Added activityDetails column');
+          }
+          if (!hasDocuments) {
+            await db.execute('ALTER TABLE "celebrations" ADD COLUMN "documents" text');
+            console.log('Added documents column');
+          }
+        }
+      } catch (columnCheckError) {
+        console.log('Column check failed, will create table:', columnCheckError);
+        tableExists = false;
+      }
+
+      if (!tableExists) {
+        // Create table with new schema
+        await db.execute(`
+          CREATE TABLE IF NOT EXISTS "celebrations" (
+            "id" integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+            "clientName" varchar(255),
+            "supportiveMessage" text NOT NULL,
+            "activityDetails" text,
+            "documents" text,
+            "bibleVerse" text,
+            "bibleReference" varchar(100),
+            "photoUrl" text,
+            "createdAt" timestamp DEFAULT now() NOT NULL,
+            "createdBy" varchar(255)
+          );
+        `);
+        console.log('Table created with new schema');
+      }
     } catch (tableError) {
-      console.log('Table already exists or creation failed:', tableError);
-      // Continue anyway - table might already exist
+      console.log('Table setup failed:', tableError);
+      // Try to create basic table as fallback
+      try {
+        await db.execute(`
+          CREATE TABLE IF NOT EXISTS "celebrations" (
+            "id" integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+            "clientName" varchar(255),
+            "supportiveMessage" text NOT NULL,
+            "activityDetails" text,
+            "documents" text,
+            "bibleVerse" text,
+            "bibleReference" varchar(100),
+            "photoUrl" text,
+            "createdAt" timestamp DEFAULT now() NOT NULL,
+            "createdBy" varchar(255)
+          );
+        `);
+      } catch (fallbackError) {
+        console.error('Fallback table creation failed:', fallbackError);
+      }
     }
 
     const result = await db.insert(celebrations).values({
