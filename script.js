@@ -129,25 +129,25 @@ document.addEventListener('DOMContentLoaded', function() {
         ];
 
         try {
-            // Try to fetch from Quotable API
-            const response = await fetch('https://api.quotable.io/random?tags=inspirational|motivational|wisdom|success&minLength=50&maxLength=150', {
+            // Try to fetch from ZenQuotes API (more reliable)
+            const response = await fetch('https://zenquotes.io/api/random', {
                 method: 'GET'
             });
 
             if (response.ok) {
                 const data = await response.json();
-                if (data.content && data.author) {
+                if (data && data.length > 0 && data[0].q && data[0].a) {
                     return {
-                        text: data.content,
-                        author: data.author
+                        text: data[0].q,
+                        author: data[0].a
                     };
                 }
             }
             
-            console.log('Quotable API unavailable, using fallback quote');
+            console.log('ZenQuotes API unavailable, using fallback quote');
             
         } catch (error) {
-            console.log('Error fetching from Quotable API, using fallback:', error.message);
+            console.log('Error fetching from ZenQuotes API, using fallback:', error.message);
         }
 
         // Use fallback quote if API fails
