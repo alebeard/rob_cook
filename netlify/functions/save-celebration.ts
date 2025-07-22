@@ -1,6 +1,10 @@
 import { Handler } from '@netlify/functions';
 
 export const handler: Handler = async (event, context) => {
+  console.log('=== SAVE CELEBRATION FUNCTION STARTED ===');
+  console.log('Method:', event.httpMethod);
+  console.log('Headers:', event.headers);
+  
   // Enable CORS
   const headers = {
     'Access-Control-Allow-Origin': '*',
@@ -10,6 +14,7 @@ export const handler: Handler = async (event, context) => {
 
   // Wrap everything in try-catch to ensure JSON response
   try {
+    console.log('Entering main try block...');
     if (event.httpMethod === 'OPTIONS') {
       return { statusCode: 200, headers };
     }
@@ -22,9 +27,12 @@ export const handler: Handler = async (event, context) => {
       };
     }
 
+    console.log('About to perform dynamic imports...');
     // Dynamic imports to catch import errors
     const { createDb } = await import('../../db/index');
+    console.log('Successfully imported createDb function');
     const { celebrations } = await import('../../db/schema');
+    console.log('Successfully imported celebrations schema');
     
     // Create database connection
     const db = createDb();
@@ -62,7 +70,22 @@ export const handler: Handler = async (event, context) => {
       };
     }
 
-    const body = JSON.parse(event.body || '{}');
+    console.log('Parsing request body...');
+    console.log('Body length:', event.body?.length || 0);
+    
+    let body;
+    try {
+      body = JSON.parse(event.body || '{}');
+      console.log('Body parsed successfully');
+    } catch (parseError) {
+      console.error('Failed to parse body:', parseError);
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({ error: 'Invalid JSON in request body' }),
+      };
+    }
+    
     const {
       clientName,
       supportiveMessage,
@@ -73,6 +96,8 @@ export const handler: Handler = async (event, context) => {
       photoUrl,
       createdBy
     } = body;
+    
+    console.log('Data extraction complete, photoUrl length:', photoUrl?.length || 0);
 
     if (!supportiveMessage) {
       return {

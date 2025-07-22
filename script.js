@@ -332,6 +332,29 @@ document.addEventListener('DOMContentLoaded', function() {
         generateCelebration();
     });
 
+    // Handle database test functionality
+    const dbTestBtn = document.getElementById('dbTestBtn');
+    dbTestBtn.addEventListener('click', async function() {
+        try {
+            dbTestBtn.textContent = 'Testing...';
+            dbTestBtn.disabled = true;
+            
+            const response = await fetch('/.netlify/functions/db-test');
+            const result = await response.json();
+            
+            if (response.ok) {
+                alert('Database test successful!\n\n' + JSON.stringify(result, null, 2));
+            } else {
+                alert('Database test failed!\n\n' + JSON.stringify(result, null, 2));
+            }
+        } catch (error) {
+            alert('Database test error: ' + error.message);
+        } finally {
+            dbTestBtn.textContent = 'Test Database Connection';
+            dbTestBtn.disabled = false;
+        }
+    });
+
     // Handle print functionality
     printBtn.addEventListener('click', function() {
         window.print();
