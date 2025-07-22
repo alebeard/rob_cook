@@ -86,25 +86,29 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Function to fetch random Bible verse
     async function fetchRandomBibleVerse() {
-        try {
-            // Array of popular inspirational verses for fallback
-            const fallbackVerses = [
-                { text: "I can do all things through Christ who strengthens me.", reference: "Philippians 4:13" },
-                { text: "For I know the plans I have for you, declares the Lord, plans to prosper you and not to harm you, to give you hope and a future.", reference: "Jeremiah 29:11" },
-                { text: "Trust in the Lord with all your heart and lean not on your own understanding.", reference: "Proverbs 3:5" },
-                { text: "Be strong and courageous. Do not be afraid; do not be discouraged, for the Lord your God will be with you wherever you go.", reference: "Joshua 1:9" },
-                { text: "And we know that in all things God works for the good of those who love him.", reference: "Romans 8:28" }
-            ];
+        // Array of popular inspirational verses for fallback
+        const fallbackVerses = [
+            { text: "I can do all things through Christ who strengthens me.", reference: "Philippians 4:13" },
+            { text: "For I know the plans I have for you, declares the Lord, plans to prosper you and not to harm you, to give you hope and a future.", reference: "Jeremiah 29:11" },
+            { text: "Trust in the Lord with all your heart and lean not on your own understanding.", reference: "Proverbs 3:5" },
+            { text: "Be strong and courageous. Do not be afraid; do not be discouraged, for the Lord your God will be with you wherever you go.", reference: "Joshua 1:9" },
+            { text: "And we know that in all things God works for the good of those who love him.", reference: "Romans 8:28" },
+            { text: "Give thanks to the Lord, for he is good; his love endures forever.", reference: "Psalm 107:1" },
+            { text: "The Lord your God is with you, the Mighty Warrior who saves.", reference: "Zephaniah 3:17" },
+            { text: "Have I not commanded you? Be strong and courageous. Do not be afraid; do not be discouraged, for the Lord your God will be with you wherever you go.", reference: "Joshua 1:9" }
+        ];
 
+        try {
             // Try to fetch from bible-api.com with a random verse
-            const randomBooks = ['john', 'psalms', 'proverbs', 'philippians', 'romans', 'corinthians', 'ephesians'];
+            const randomBooks = ['john', 'psalms', 'proverbs', 'philippians', 'romans', '1corinthians', 'ephesians'];
             const randomBook = randomBooks[Math.floor(Math.random() * randomBooks.length)];
-            const randomChapter = Math.floor(Math.random() * 10) + 1; // 1-10
-            const randomVerse = Math.floor(Math.random() * 20) + 1; // 1-20
+            
+            // Use more conservative chapter/verse ranges to avoid 404s
+            const randomChapter = Math.floor(Math.random() * 5) + 1; // 1-5
+            const randomVerse = Math.floor(Math.random() * 10) + 1; // 1-10
             
             const response = await fetch(`https://bible-api.com/${randomBook}+${randomChapter}:${randomVerse}`, {
-                method: 'GET',
-                timeout: 5000
+                method: 'GET'
             });
 
             if (response.ok) {
@@ -116,11 +120,15 @@ document.addEventListener('DOMContentLoaded', function() {
                     };
                 }
             }
+            
+            // If API response is not ok or missing data, fall through to fallback
+            console.log('Bible API returned invalid data, using fallback verse');
+            
         } catch (error) {
-            console.log('Bible API unavailable, using fallback verse');
+            console.log('Bible API unavailable, using fallback verse:', error.message);
         }
 
-        // Use fallback verse if API fails
+        // Use fallback verse if API fails or returns invalid data
         const randomFallback = fallbackVerses[Math.floor(Math.random() * fallbackVerses.length)];
         return randomFallback;
     }
