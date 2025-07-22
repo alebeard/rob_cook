@@ -41,14 +41,14 @@ export const handler: Handler = async (event, context) => {
     try {
       const result = await db.execute(`
         INSERT INTO "celebrations" ("supportiveMessage") 
-        VALUES ($1) 
+        VALUES ('Test insert from test-insert function') 
         RETURNING id, "supportiveMessage";
-      `, ['Test insert from test-insert function']);
+      `);
       
       console.log('Simple insert successful:', result);
       
       // Clean up test record
-      await db.execute(`DELETE FROM "celebrations" WHERE "supportiveMessage" = $1`, ['Test insert from test-insert function']);
+      await db.execute(`DELETE FROM "celebrations" WHERE "supportiveMessage" = 'Test insert from test-insert function'`);
       
       return {
         statusCode: 200,
