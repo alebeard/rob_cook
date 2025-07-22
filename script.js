@@ -355,6 +355,31 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    // Handle test insert functionality
+    const testInsertBtn = document.getElementById('testInsertBtn');
+    testInsertBtn.addEventListener('click', async function() {
+        try {
+            testInsertBtn.textContent = 'Testing...';
+            testInsertBtn.disabled = true;
+            
+            const response = await fetch('/.netlify/functions/test-insert', {
+                method: 'POST'
+            });
+            const result = await response.json();
+            
+            if (result.success) {
+                alert('Insert test successful!\n\nTable structure:\n' + JSON.stringify(result.tableStructure, null, 2));
+            } else {
+                alert('Insert test results:\n\n' + JSON.stringify(result, null, 2));
+            }
+        } catch (error) {
+            alert('Test insert error: ' + error.message);
+        } finally {
+            testInsertBtn.textContent = 'Test Table Insert';
+            testInsertBtn.disabled = false;
+        }
+    });
+
     // Handle database rebuild functionality
     const rebuildDbBtn = document.getElementById('rebuildDbBtn');
     rebuildDbBtn.addEventListener('click', async function() {
