@@ -506,6 +506,9 @@ header h1 {
         margin: 0;
         padding: 0;
         font-size: 12pt;
+        -webkit-print-color-adjust: exact;
+        color-adjust: exact;
+        print-color-adjust: exact;
     }
     
     .form-section, .button-group {
@@ -517,114 +520,255 @@ header h1 {
     }
     
     .celebration-card {
-        box-shadow: none;
-        border: 2px solid #333;
-        border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.1) !important;
+        border-radius: 20px !important;
         margin: 0;
         page-break-inside: avoid;
-        background: white !important;
+        background: linear-gradient(145deg, #fff5f5 0%, #fff0e6 50%, #f0f8ff 100%) !important;
+        border: 3px solid transparent !important;
+        position: relative;
+        -webkit-print-color-adjust: exact;
+        color-adjust: exact;
+        print-color-adjust: exact;
     }
     
-    /* Hide the decorative header to save space */
+    .celebration-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #feca57, #ff9ff3) !important;
+        background-size: 400% 400%;
+        z-index: -1;
+        margin: -3px;
+        border-radius: 20px;
+        -webkit-print-color-adjust: exact;
+        color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    
+    /* Keep the beautiful header with colors */
     .card-header {
-        display: none;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%) !important;
+        color: white !important;
+        padding: 25px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+        -webkit-print-color-adjust: exact;
+        color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    
+    .card-header::before {
+        content: '🎉';
+        position: absolute;
+        top: 10px;
+        left: 20px;
+        font-size: 1.5rem;
+    }
+    
+    .card-header::after {
+        content: '🌟';
+        position: absolute;
+        top: 15px;
+        right: 25px;
+        font-size: 1.2rem;
+    }
+    
+    .card-header h2 {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: white !important;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        -webkit-print-color-adjust: exact;
+        color-adjust: exact;
+        print-color-adjust: exact;
     }
     
     .card-content {
-        padding: 20px;
+        padding: 25px;
     }
     
     .photo-display img {
-        max-height: 200px;
-        border: 2px solid #333;
+        max-height: 250px;
+        border: 3px solid var(--accent-color) !important;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
     
     .message-display {
-        background: #f9f9f9 !important;
-        border: 1px solid #333 !important;
+        background: linear-gradient(135deg, #fffef7 0%, #fff8e1 30%, #ffeaa7 100%) !important;
+        padding: 20px 25px;
+        border-radius: 15px;
+        margin-bottom: 20px;
+        border: 3px solid #f39c12 !important;
+        box-shadow: 0 8px 20px rgba(243, 156, 18, 0.2), inset 0 2px 4px rgba(255, 255, 255, 0.8);
+        position: relative;
         page-break-inside: avoid;
-        transform: none !important;
-        margin-bottom: 15px;
-        padding: 15px;
+        background-image: 
+            linear-gradient(90deg, transparent 79px, #e0e0e0 79px, #e0e0e0 81px, transparent 81px),
+            linear-gradient(180deg, transparent 0px, transparent 24px, #ffeaa7 24px) !important;
+        background-size: 82px 25px;
+        background-position: 0 0;
+        -webkit-print-color-adjust: exact;
+        color-adjust: exact;
+        print-color-adjust: exact;
     }
     
-    .message-display::before,
+    .message-display::before {
+        content: '';
+        position: absolute;
+        top: -5px;
+        left: 20px;
+        width: 25px;
+        height: 25px;
+        background: radial-gradient(circle, #ff6b6b 40%, transparent 40%);
+        border-radius: 50%;
+        opacity: 0.7;
+    }
+    
     .message-display::after {
-        display: none;
+        content: '';
+        position: absolute;
+        top: -3px;
+        right: 15px;
+        width: 20px;
+        height: 20px;
+        background: radial-gradient(circle, #4ecdc4 40%, transparent 40%);
+        border-radius: 50%;
+        opacity: 0.6;
     }
     
     .message-display h3 {
-        color: #333 !important;
-        font-size: 18pt;
-        transform: none !important;
-        margin-bottom: 10px;
+        font-family: 'Caveat', cursive;
+        color: #2980b9 !important;
+        font-size: 1.5rem;
+        margin-bottom: 12px;
+        font-weight: 600;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        -webkit-print-color-adjust: exact;
+        color-adjust: exact;
+        print-color-adjust: exact;
     }
     
     .message-display p {
-        color: #333 !important;
-        font-size: 12pt;
-        line-height: 1.4;
+        font-family: 'Kalam', cursive;
+        color: #2c3e50 !important;
+        font-size: 11pt;
+        line-height: 1.6;
+        font-weight: 400;
+        text-shadow: 0.5px 0.5px 1px rgba(0,0,0,0.05);
+        margin-left: 15px;
     }
     
     .bible-verse-display {
-        background: #f5f5f5 !important;
-        border: 1px dashed #666 !important;
-        transform: none !important;
+        background: linear-gradient(135deg, #f8f9ff 0%, #e8f2ff 50%, #fff8f0 100%) !important;
+        padding: 15px 20px;
+        border-radius: 12px;
+        border: 2px dashed #9b59b6 !important;
+        margin-top: 15px;
         page-break-inside: avoid;
-        margin-top: 10px;
-        padding: 12px;
+        box-shadow: 0 4px 12px rgba(155, 89, 182, 0.15);
+        -webkit-print-color-adjust: exact;
+        color-adjust: exact;
+        print-color-adjust: exact;
     }
     
-    .bible-verse-display::before,
+    .bible-verse-display::before {
+        content: '✝️';
+        position: absolute;
+        top: -8px;
+        right: 15px;
+        font-size: 1.2rem;
+        background: white;
+        padding: 2px 6px;
+        border-radius: 50%;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    
     .bible-verse-display::after {
-        display: none;
+        content: '';
+        position: absolute;
+        bottom: 5px;
+        left: 20px;
+        width: 15px;
+        height: 15px;
+        background: radial-gradient(circle, #e74c3c 40%, transparent 40%);
+        border-radius: 50%;
+        opacity: 0.5;
     }
     
     .verse-text p {
-        color: #333 !important;
+        font-family: 'Caveat', cursive;
         font-size: 11pt;
+        color: #2c3e50 !important;
+        font-weight: 500;
+        line-height: 1.6;
+        margin-bottom: 8px;
+        font-style: italic;
+        text-shadow: 0.5px 0.5px 1px rgba(0,0,0,0.05);
     }
     
     .verse-text cite {
-        color: #666 !important;
+        font-family: 'Kalam', cursive;
         font-size: 10pt;
+        color: #8e44ad !important;
+        font-weight: 600;
+        display: block;
+        margin-top: 6px;
+        text-align: right;
+        padding-right: 10px;
     }
     
     /* Recipe on second page */
     .recipe-display {
         page-break-before: always;
-        background: white !important;
-        border: 2px solid #333;
-        border-radius: 12px;
+        background: linear-gradient(135deg, #fffef7 0%, #fff8e1 30%, #ffeaa7 100%) !important;
+        border: 3px solid #f39c12 !important;
+        border-radius: 15px;
         padding: 20px;
         margin-top: 0;
+        -webkit-print-color-adjust: exact;
+        color-adjust: exact;
+        print-color-adjust: exact;
     }
     
     .recipe-display h3 {
-        color: #333 !important;
-        font-size: 16pt;
+        color: #f39c12 !important;
+        font-size: 14pt;
         margin-bottom: 15px;
         text-align: center;
-        border-bottom: 1px solid #333;
+        border-bottom: 2px solid #f39c12 !important;
         padding-bottom: 8px;
+        font-family: 'Caveat', cursive;
+        font-weight: 600;
     }
     
     .recipe-display div {
-        color: #333 !important;
-        font-size: 11pt;
-        line-height: 1.4;
+        color: #2c3e50 !important;
+        font-size: 10pt;
+        line-height: 1.6;
+        font-family: 'Kalam', cursive;
     }
     
     .card-footer {
-        background: white !important;
-        border-top: 1px solid #333;
-        padding: 10px;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%) !important;
+        border-top: 2px solid #dee2e6 !important;
+        padding: 15px;
         text-align: center;
+        -webkit-print-color-adjust: exact;
+        color-adjust: exact;
+        print-color-adjust: exact;
     }
     
     .achievement-date {
-        color: #666 !important;
+        color: #6c757d !important;
         font-size: 10pt;
+        font-weight: 500;
+        font-family: 'Kalam', cursive;
     }
     
     /* Ensure proper page breaks and sizing */
@@ -633,10 +777,16 @@ header h1 {
         page-break-inside: avoid;
     }
     
-    /* Remove animations and transforms for print */
+    /* Keep fonts but remove problematic animations */
     * {
         animation: none !important;
         transition: none !important;
-        transform: none !important;
+    }
+    
+    /* Ensure color preservation */
+    .message-display, .bible-verse-display, .card-header, .celebration-card, .recipe-display {
+        -webkit-print-color-adjust: exact !important;
+        color-adjust: exact !important;
+        print-color-adjust: exact !important;
     }
 }
