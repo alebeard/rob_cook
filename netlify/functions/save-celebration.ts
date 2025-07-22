@@ -222,17 +222,5 @@ export const handler: Handler = async (event, context) => {
         timestamp: new Date().toISOString()
       }),
     };
-  } catch (criticalError) {
-    // Catch any errors from imports or other critical failures
-    console.error('Critical error in save-celebration function:', criticalError);
-    return {
-      statusCode: 500,
-      headers,
-      body: JSON.stringify({
-        error: 'Function initialization failed',
-        details: criticalError instanceof Error ? criticalError.message : 'Unknown critical error',
-        timestamp: new Date().toISOString()
-      }),
-    };
   }
 };
