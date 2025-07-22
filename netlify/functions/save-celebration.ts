@@ -42,6 +42,23 @@ export const handler: Handler = async (event, context) => {
 
     console.log('Database URL configured, attempting database operations...');
 
+    // Test database connection
+    try {
+      console.log('Testing database connection...');
+      await db.execute('SELECT 1 as test');
+      console.log('Database connection successful');
+    } catch (dbTestError) {
+      console.error('Database connection test failed:', dbTestError);
+      return {
+        statusCode: 500,
+        headers,
+        body: JSON.stringify({
+          error: 'Database connection failed',
+          details: dbTestError instanceof Error ? dbTestError.message : 'Unknown database error'
+        }),
+      };
+    }
+
     const body = JSON.parse(event.body || '{}');
     const {
       clientName,
@@ -63,6 +80,16 @@ export const handler: Handler = async (event, context) => {
     }
 
     console.log('Attempting to save celebration to database...');
+    console.log('Request body received:', {
+      hasClientName: !!clientName,
+      hasSupportiveMessage: !!supportiveMessage,
+      hasActivityDetails: !!activityDetails,
+      hasDocuments: !!documents,
+      hasBibleVerse: !!bibleVerse,
+      hasBibleReference: !!bibleReference,
+      hasPhotoUrl: !!photoUrl,
+      hasCreatedBy: !!createdBy
+    });
     
     // First, try to ensure the table exists by creating it if it doesn't
     try {
@@ -141,8 +168,10 @@ export const handler: Handler = async (event, context) => {
       }
     }
 
-    const result = await db.insert(celebrations).values({
-      clientName,
+    console.log('About to insert celebration record...');
+    
+    const insertData = {
+      clientName: clientName || null,
       supportiveMessage,
       activityDetails: activityDetails || null,
       documents: documents || null,
@@ -150,7 +179,15 @@ export const handler: Handler = async (event, context) => {
       bibleReference: bibleReference || null,
       photoUrl: photoUrl || null,
       createdBy: createdBy || null,
-    }).returning();
+    };
+    
+    console.log('Insert data prepared:', {
+      ...insertData,
+      photoUrl: insertData.photoUrl ? `[${insertData.photoUrl.length} chars]` : null,
+      documents: insertData.documents ? `[${insertData.documents.length} chars]` : null
+    });
+
+    const result = await db.insert(celebrations).values(insertData).returning();
 
     console.log('Successfully saved celebration:', result[0]);
 
