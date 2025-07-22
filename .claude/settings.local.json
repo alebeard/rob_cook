@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git init:*)",
+      "Bash(git remote add:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "WebFetch(domain:github.com)",
+      "Bash(git branch:*)",
+      "Bash(netlify:*)",
+      "Bash(npm install:*)",
+      "Bash(npx netlify db:*)",
+      "Bash(npm init:*)",
+      "Bash(git reset:*)",
+      "Bash(npx drizzle-kit:*)"
+    ],
+    "deny": []
+  }
+}

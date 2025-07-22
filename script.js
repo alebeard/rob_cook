@@ -405,7 +405,40 @@ document.addEventListener('DOMContentLoaded', function() {
             
         } catch (error) {
             console.error('Error saving celebration:', error);
-            alert('Note: Could not save to database, but you can still print your celebration.');
+            
+            // Show more detailed error message
+            let errorMessage = 'Could not save to database, but you can still print your celebration.';
+            
+            if (error.message.includes('Failed to save celebration')) {
+                errorMessage = 'Database connection issue. Your celebration wasn\'t saved, but you can still print it.';
+            } else if (error.message.includes('Database not configured')) {
+                errorMessage = 'Database is being set up. Your celebration wasn\'t saved, but you can still print it.';
+            }
+            
+            // Create a more user-friendly notification
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #f39c12;
+                color: white;
+                padding: 15px 20px;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+                z-index: 1000;
+                max-width: 300px;
+                font-size: 14px;
+            `;
+            notification.textContent = errorMessage;
+            document.body.appendChild(notification);
+            
+            // Remove notification after 5 seconds
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 5000);
         } finally {
             generateBtn.textContent = 'Generate Celebration';
             generateBtn.disabled = false;
