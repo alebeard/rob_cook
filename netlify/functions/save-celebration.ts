@@ -27,15 +27,15 @@ export const handler: Handler = async (event, context) => {
       };
     }
 
-    console.log('About to perform dynamic imports...');
-    // Dynamic imports to catch import errors
-    const { createDb } = await import('../../db/index');
-    console.log('Successfully imported createDb function');
-    const { celebrations } = await import('../../db/schema');
-    console.log('Successfully imported celebrations schema');
+    console.log('About to create database connection...');
+    // Use the same database connection method as the working test-insert
+    const { neon } = await import('@netlify/neon');
+    const { drizzle } = await import('drizzle-orm/neon-http');
     
-    // Create database connection
-    const db = createDb();
+    // Create database connection directly (same as working test-insert)
+    const client = neon(process.env.NETLIFY_DATABASE_URL!);
+    const db = drizzle({ client });
+    console.log('Database connection created successfully');
 
     // Check if database connection is available
     if (!process.env.NETLIFY_DATABASE_URL) {
@@ -215,7 +215,24 @@ export const handler: Handler = async (event, context) => {
       documents: insertData.documents ? `[${insertData.documents.length} chars]` : null
     });
 
-    const result = await db.insert(celebrations).values(insertData).returning();
+    // Use raw SQL instead of Drizzle ORM (same approach as working test-insert)
+    const result = await db.execute(`
+      INSERT INTO "celebrations" (
+        "clientName", "supportiveMessage", "activityDetails", 
+        "documents", "bibleVerse", "bibleReference", 
+        "photoUrl", "createdBy"
+      ) VALUES (
+        ${insertData.clientName ? `'${insertData.clientName.replace(/'/g, "''")}'` : 'NULL'},
+        '${insertData.supportiveMessage.replace(/'/g, "''")}',
+        ${insertData.activityDetails ? `'${insertData.activityDetails.replace(/'/g, "''")}'` : 'NULL'},
+        ${insertData.documents ? `'${insertData.documents.replace(/'/g, "''")}'` : 'NULL'},
+        ${insertData.bibleVerse ? `'${insertData.bibleVerse.replace(/'/g, "''")}'` : 'NULL'},
+        ${insertData.bibleReference ? `'${insertData.bibleReference.replace(/'/g, "''")}'` : 'NULL'},
+        ${insertData.photoUrl ? `'${insertData.photoUrl.replace(/'/g, "''")}'` : 'NULL'},
+        ${insertData.createdBy ? `'${insertData.createdBy.replace(/'/g, "''")}'` : 'NULL'}
+      )
+      RETURNING id, "supportiveMessage", "createdAt";
+    `);
 
     console.log('Successfully saved celebration:', result[0]);
 
