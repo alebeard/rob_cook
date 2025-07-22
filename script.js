@@ -370,6 +370,12 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('=== TEST INSERT RESULTS ===');
             console.log('Full result:', result);
             console.log('Table structure:', result.tableStructure);
+            if (result.tableStructure?.rows) {
+                console.log('Table columns:');
+                result.tableStructure.rows.forEach(row => {
+                    console.log(`- ${row.column_name} (${row.data_type}) ${row.is_nullable === 'YES' ? 'nullable' : 'not null'}`);
+                });
+            }
             if (result.insertError) {
                 console.log('Insert error:', result.insertError);
             }
