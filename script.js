@@ -20,6 +20,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const bibleVerseDisplay = document.getElementById('bibleVerseDisplay');
     const verseContent = document.getElementById('verseContent');
     const verseReference = document.getElementById('verseReference');
+    const regenerateVerse = document.getElementById('regenerateVerse');
 
     let uploadedPhotoSrc = '';
     let currentBibleVerse = null;
@@ -86,49 +87,81 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Function to fetch random Bible verse
     async function fetchRandomBibleVerse() {
-        // Array of popular inspirational verses for fallback
+        // Expanded array of encouraging and uplifting verses for fallback
         const fallbackVerses = [
             { text: "I can do all things through Christ who strengthens me.", reference: "Philippians 4:13" },
             { text: "For I know the plans I have for you, declares the Lord, plans to prosper you and not to harm you, to give you hope and a future.", reference: "Jeremiah 29:11" },
-            { text: "Trust in the Lord with all your heart and lean not on your own understanding.", reference: "Proverbs 3:5" },
+            { text: "Trust in the Lord with all your heart and lean not on your own understanding.", reference: "Proverbs 3:5-6" },
             { text: "Be strong and courageous. Do not be afraid; do not be discouraged, for the Lord your God will be with you wherever you go.", reference: "Joshua 1:9" },
             { text: "And we know that in all things God works for the good of those who love him.", reference: "Romans 8:28" },
             { text: "Give thanks to the Lord, for he is good; his love endures forever.", reference: "Psalm 107:1" },
-            { text: "The Lord your God is with you, the Mighty Warrior who saves.", reference: "Zephaniah 3:17" },
-            { text: "Have I not commanded you? Be strong and courageous. Do not be afraid; do not be discouraged, for the Lord your God will be with you wherever you go.", reference: "Joshua 1:9" }
+            { text: "The Lord your God is with you, the Mighty Warrior who saves. He will take great delight in you; in his love he will no longer rebuke you, but will rejoice over you with singing.", reference: "Zephaniah 3:17" },
+            { text: "Cast all your anxiety on him because he cares for you.", reference: "1 Peter 5:7" },
+            { text: "The Lord bless you and keep you; the Lord make his face shine on you and be gracious to you.", reference: "Numbers 6:24-25" },
+            { text: "You are precious and honored in my sight, and I love you.", reference: "Isaiah 43:4" },
+            { text: "Come to me, all you who are weary and burdened, and I will give you rest.", reference: "Matthew 11:28" },
+            { text: "Peace I leave with you; my peace I give you. Do not let your hearts be troubled and do not be afraid.", reference: "John 14:27" },
+            { text: "The Lord is my shepherd, I lack nothing. He makes me lie down in green pastures, he leads me beside quiet waters, he refreshes my soul.", reference: "Psalm 23:1-3" },
+            { text: "But those who hope in the Lord will renew their strength. They will soar on wings like eagles.", reference: "Isaiah 40:31" },
+            { text: "Love is patient, love is kind. It does not envy, it does not boast, it is not proud.", reference: "1 Corinthians 13:4" },
+            { text: "Every good and perfect gift is from above, coming down from the Father of the heavenly lights.", reference: "James 1:17" },
+            { text: "This is the day the Lord has made; let us rejoice and be glad in it.", reference: "Psalm 118:24" },
+            { text: "May the God of hope fill you with all joy and peace as you trust in him.", reference: "Romans 15:13" },
+            { text: "The fruit of the Spirit is love, joy, peace, forbearance, kindness, goodness, faithfulness, gentleness and self-control.", reference: "Galatians 5:22-23" },
+            { text: "And God is able to bless you abundantly, so that in all things at all times, having all that you need, you will abound in every good work.", reference: "2 Corinthians 9:8" }
         ];
 
         try {
-            // Try to fetch from bible-api.com with a random verse
-            const randomBooks = ['john', 'psalms', 'proverbs', 'philippians', 'romans', '1corinthians', 'ephesians'];
-            const randomBook = randomBooks[Math.floor(Math.random() * randomBooks.length)];
+            // Focus on encouraging books and use specific encouraging verses
+            const encouragingVerses = [
+                'psalms+23:1',   // The Lord is my shepherd
+                'psalms+46:1',   // God is our refuge and strength
+                'psalms+139:14', // I praise you because I am fearfully and wonderfully made
+                'philippians+4:13', // I can do all things through Christ
+                'jeremiah+29:11',   // Plans to prosper you
+                'romans+8:28',      // All things work together for good
+                'isaiah+40:31',     // Renew their strength
+                'john+14:27',       // Peace I leave with you
+                '1peter+5:7',       // Cast all anxiety on him
+                'matthew+11:28',    // Come to me all who are weary
+                'proverbs+3:5',     // Trust in the Lord
+                '2corinthians+12:9' // My grace is sufficient
+            ];
             
-            // Use more conservative chapter/verse ranges to avoid 404s
-            const randomChapter = Math.floor(Math.random() * 5) + 1; // 1-5
-            const randomVerse = Math.floor(Math.random() * 10) + 1; // 1-10
+            const randomVerse = encouragingVerses[Math.floor(Math.random() * encouragingVerses.length)];
             
-            const response = await fetch(`https://bible-api.com/${randomBook}+${randomChapter}:${randomVerse}`, {
+            const response = await fetch(`https://bible-api.com/${randomVerse}`, {
                 method: 'GET'
             });
 
             if (response.ok) {
                 const data = await response.json();
                 if (data.text && data.reference) {
-                    return {
-                        text: data.text.replace(/[\r\n]+/g, ' ').trim(),
-                        reference: data.reference
-                    };
+                    // Filter out potentially harsh language
+                    const verseText = data.text.replace(/[\r\n]+/g, ' ').trim();
+                    const harshWords = ['wrath', 'anger', 'destroy', 'punish', 'judgment', 'condemn', 'curse', 'vengeance'];
+                    
+                    // Check if verse contains harsh words
+                    const containsHarshWords = harshWords.some(word => 
+                        verseText.toLowerCase().includes(word)
+                    );
+                    
+                    if (!containsHarshWords) {
+                        return {
+                            text: verseText,
+                            reference: data.reference
+                        };
+                    } else {
+                        console.log('API verse contains harsh language, using fallback');
+                    }
                 }
             }
-            
-            // If API response is not ok or missing data, fall through to fallback
-            console.log('Bible API returned invalid data, using fallback verse');
             
         } catch (error) {
             console.log('Bible API unavailable, using fallback verse:', error.message);
         }
 
-        // Use fallback verse if API fails or returns invalid data
+        // Use fallback verse if API fails or returns harsh content
         const randomFallback = fallbackVerses[Math.floor(Math.random() * fallbackVerses.length)];
         return randomFallback;
     }
@@ -174,6 +207,35 @@ document.addEventListener('DOMContentLoaded', function() {
     // Handle print functionality
     printBtn.addEventListener('click', function() {
         window.print();
+    });
+
+    // Handle Bible verse regeneration
+    regenerateVerse.addEventListener('click', async function() {
+        try {
+            regenerateVerse.disabled = true;
+            regenerateVerse.textContent = '🔄 Loading...';
+            
+            // Fetch a new Bible verse
+            const newVerse = await fetchRandomBibleVerse();
+            
+            if (newVerse) {
+                currentBibleVerse = newVerse;
+                verseContent.textContent = `"${newVerse.text}"`;
+                verseReference.textContent = `- ${newVerse.reference}`;
+                
+                // Add a subtle animation to show the verse changed
+                bibleVerseDisplay.style.transition = 'opacity 0.3s ease';
+                bibleVerseDisplay.style.opacity = '0.7';
+                setTimeout(() => {
+                    bibleVerseDisplay.style.opacity = '1';
+                }, 150);
+            }
+        } catch (error) {
+            console.error('Error regenerating Bible verse:', error);
+        } finally {
+            regenerateVerse.disabled = false;
+            regenerateVerse.textContent = '🔄 New Verse';
+        }
     });
 
     // Generate celebration card function

@@ -436,6 +436,40 @@ header h1 {
     padding-right: 10px;
 }
 
+/* Regenerate Button Styling */
+.regenerate-btn {
+    background: linear-gradient(135deg, #8e44ad 0%, #9b59b6 100%);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    margin-top: 12px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 6px rgba(142, 68, 173, 0.3);
+    font-family: 'Kalam', cursive;
+}
+
+.regenerate-btn:hover {
+    background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(142, 68, 173, 0.4);
+}
+
+.regenerate-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(142, 68, 173, 0.3);
+}
+
+.regenerate-btn:disabled {
+    background: #bdc3c7;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
 .recipe-display {
     background: #FFFBF0;
     padding: 20px;
@@ -721,6 +755,11 @@ header h1 {
         margin-top: 6px;
         text-align: right;
         padding-right: 10px;
+    }
+    
+    /* Hide regenerate button in print */
+    .regenerate-btn {
+        display: none !important;
     }
     
     /* Recipe on second page */
